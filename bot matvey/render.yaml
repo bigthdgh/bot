@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: uzdechka-bot
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_API_KEYS
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      - key: QWEN_API_KEY
+        sync: false
+      - key: QWEN_MODEL
+        value: qwen/qwen3-next-80b-a3b-instruct:free
+      - key: QWEN_ENABLED
+        value: true
+      - key: ADMIN_IDS
+        value: 8425434588,8062523010
+      - key: MATVEY_ID
+        value: 2076532055
+      - key: AI_PHRASE_CHANCE
+        value: 0.35
+      - key: PYTHON_VERSION
+        value: 3.11.0
