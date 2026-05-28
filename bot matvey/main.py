@@ -4149,6 +4149,24 @@ async def on_shutdown():
     print("Бот остановлен.")
 
 
+async def ping_handler(request):
+    """HTTP ping endpoint для Render health check"""
+    from aiohttp import web
+    return web.Response(text="OK", status=200)
+
+
+async def start_web_server():
+    """Запуск HTTP сервера для пинга"""
+    from aiohttp import web
+    app = web.Application()
+    app.router.add_get('/ping', ping_handler)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, '0.0.0.0', int(os.getenv('PORT', 8080)))
+    await site.start()
+    print(f"[HTTP] Сервер пинга запущен на порту {os.getenv('PORT', 8080)}")
+
+
 async def main():
     print("Бот Уздечка успешно запущен! Ожидание сообщений...")
     try:
@@ -4156,6 +4174,10 @@ async def main():
         print("Слэш-команды зарегистрированы в Telegram.")
     except Exception as e:
         print(f"Не удалось зарегистрировать команды: {e}")
+    
+    # Запускаем HTTP сервер для пинга
+    await start_web_server()
+    
     dp.shutdown.register(on_shutdown)
     await dp.start_polling(bot)
 
